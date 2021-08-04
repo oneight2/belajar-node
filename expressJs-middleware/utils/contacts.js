@@ -11,10 +11,22 @@ if (!fs.existsSync(file)) {
   fs.writeFileSync(file, "[]", "utf-8");
 }
 
+// AMBIL SEMUA DATA CONTACTS
 const loadContact = () => {
   const file = fs.readFileSync("data/contacts.json", "utf-8");
   const contacts = JSON.parse(file);
   return contacts;
+};
+
+// CARI DATA KONTAK / MENAMPILKAN DETAIL KONTAK
+const findContact = (nama) => {
+  const contacts = loadContact();
+
+  const contact = contacts.find(
+    (contact) => contact.nama.toLowerCase() === nama.toLowerCase()
+  );
+
+  return contact;
 };
 
 const simpanContact = (nama, nomor, email) => {
@@ -61,25 +73,6 @@ const listContact = () => {
   });
 };
 
-// Detail kontak
-const detailContact = (nama) => {
-  const contacts = loadContact();
-
-  const contact = contacts.find(
-    (contact) => contact.nama.toLowerCase() === nama.toLowerCase()
-  );
-
-  if (!contact) {
-    console.log(`${nama} tidak ditemukan`);
-    return false;
-  }
-  console.log(`ini kontak ${contact.nama}`);
-  console.log(`ini nomor ${contact.nomor}`);
-  if (contact.email) {
-    console.log(`ini email ${contact.email}`);
-  }
-};
-
 const deleteContact = (nama) => {
   const contacts = loadContact();
   const newContacts = contacts.filter(
@@ -95,4 +88,4 @@ const deleteContact = (nama) => {
   console.log(`${nama} Berhasil dihapus`);
 };
 
-module.exports = { loadContact };
+module.exports = { loadContact, findContact };
