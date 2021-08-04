@@ -29,50 +29,24 @@ const findContact = (nama) => {
   return contact;
 };
 
-const simpanContact = (nama, nomor, email) => {
-  const contact = { nama, nomor, email };
-  const contacts = loadContact();
+// menulis/menimpa file contacts JSON dengan data yang baru
 
-  //   CEK DUPLIKAT DATA
-  const duplikat = contacts.find((contact) => contact.nama === nama);
-  if (duplikat) {
-    console.log("kontak sudah terdaftar");
-
-    return false;
-  }
-
-  //   CEK FORMAT EMAIL
-  if (email) {
-    if (!validator.isEmail(email)) {
-      console.log("format email salah!");
-      return false;
-    }
-  }
-
-  //   CEK FORMAT NO HP
-
-  if (!validator.isMobilePhone(nomor, "id-ID")) {
-    console.log("nomor hp salah!");
-    return false;
-  }
-
-  contacts.push(contact);
-
+const saveContacts = (contacts) => {
   fs.writeFileSync("data/contacts.json", JSON.stringify(contacts));
-
-  console.log(`Terimakasih`);
-
-  //   rl.close();
 };
 
-// membuat list kontak
-const listContact = () => {
+// Menambah data contact baru
+const addContact = (contact) => {
   const contacts = loadContact();
-  contacts.forEach((contact, i) => {
-    console.log(`${i + 1}. ${contact.nama} - ${contact.nomor}`);
-  });
+  contacts.push(contact);
+  saveContacts(contacts);
 };
 
+// Cek Nama duplikat
+const cekDuplikat = (nama) => {
+  const contacts = loadContact();
+  return contacts.find((contact) => contact.nama === nama);
+};
 const deleteContact = (nama) => {
   const contacts = loadContact();
   const newContacts = contacts.filter(
@@ -88,4 +62,4 @@ const deleteContact = (nama) => {
   console.log(`${nama} Berhasil dihapus`);
 };
 
-module.exports = { loadContact, findContact };
+module.exports = { loadContact, findContact, addContact, cekDuplikat };
